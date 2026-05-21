@@ -2,6 +2,7 @@ import { useState } from 'react';
 import HallButton from './HallButton';
 import InfoButton from './InfoButton';
 import InfoPopup from './InfoPopup';
+import { publicAsset } from '../../utils/assets';
 
 interface HomeScreenProps {
   onHall1Click: () => void;
@@ -32,7 +33,7 @@ function HomeScreen({ onHall1Click, onHall2Click, onHall3Click }: HomeScreenProp
   return (
     <div
       className="relative w-screen h-screen flex items-center justify-center bg-[#2a1a0e] bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/images/фон на хоуп экран.png')" }}
+      style={{ backgroundImage: `url('${publicAsset('images/фон на хоуп экран.png')}')` }}
     >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/50" aria-hidden="true" />

@@ -1,5 +1,6 @@
 import type { Exhibit } from '../../types/museum';
 import ExhibitList from './ExhibitList';
+import { publicAsset } from '../../utils/assets';
 
 interface BottomPanelProps {
   hallName: string;
@@ -22,7 +23,7 @@ function BottomPanel({ hallName, exhibits, foundExhibitIds, onJournalOpen }: Bot
     >
       {/* Картинка плашки */}
       <img
-        src="/images/плашка вниз в зал.png"
+        src={publicAsset('images/плашка вниз в зал.png')}
         alt=""
         aria-hidden="true"
         style={{
