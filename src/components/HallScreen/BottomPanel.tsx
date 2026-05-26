@@ -46,7 +46,7 @@ function BottomPanel({ hallName, exhibits, foundExhibitIds, onJournalOpen }: Bot
           alignItems: 'center',
         }}
       >
-        {/* Левая половина — список экспонатов */}
+        {/* Левая половина список экспонатов */}
         <div
           style={{
             width: '45%',
@@ -62,7 +62,7 @@ function BottomPanel({ hallName, exhibits, foundExhibitIds, onJournalOpen }: Bot
           }
         </div>
 
-        {/* Правая половина — название зала и кнопка журнала */}
+        {/* название но не тру*/}
         <div
           style={{
             flex: 1,
@@ -104,11 +104,12 @@ function BottomPanel({ hallName, exhibits, foundExhibitIds, onJournalOpen }: Bot
         </button>
         </div>
 
+          {/* тру название*/}
         <span
             style={{
               position: 'absolute',
               left: '50%',
-              top: '35%',
+              top: '27%',
               transform: 'translate(-50%, -35%)',
 
               fontFamily: "'Cinzel', 'Georgia', serif",
