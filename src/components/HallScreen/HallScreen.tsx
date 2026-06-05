@@ -79,11 +79,25 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
   const handleTourNext = () => {
     setTourIndex(currentIndex => {
       if (currentIndex === null || currentIndex >= hall.exhibits.length - 1) {
-        return null;
+        return currentIndex;
       }
 
       return currentIndex + 1;
     });
+  };
+
+  const handleTourPrevious = () => {
+    setTourIndex(currentIndex => {
+      if (currentIndex === null || currentIndex <= 0) {
+        return currentIndex;
+      }
+
+      return currentIndex - 1;
+    });
+  };
+
+  const handleTourClose = () => {
+    setTourIndex(null);
   };
 
   const tourExhibit = tourIndex === null ? null : hall.exhibits[tourIndex];
@@ -156,8 +170,23 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
         <ExhibitPopup
           exhibit={tourExhibit}
           title={`Экскурсия: ${tourIndex + 1} из ${hall.exhibits.length}`}
-          actionLabel={tourIndex === hall.exhibits.length - 1 ? 'Завершить' : 'Следующий'}
-          onClose={handleTourNext}
+          actionLabel="Закрыть"
+          extraActions={[
+            {
+              label: 'Предыдущий',
+              onClick: handleTourPrevious,
+              disabled: tourIndex === 0,
+            },
+            ...(tourIndex === hall.exhibits.length - 1
+              ? []
+              : [
+                  {
+                    label: 'Следующий',
+                    onClick: handleTourNext,
+                  },
+                ]),
+          ]}
+          onClose={handleTourClose}
         />
       )}
 

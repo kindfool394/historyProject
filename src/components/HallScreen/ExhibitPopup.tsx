@@ -1,9 +1,15 @@
+import type { MouseEvent } from 'react';
 import type { Exhibit } from '../../types/museum';
 
 interface ExhibitPopupProps {
   exhibit: Exhibit;
   title?: string;
   actionLabel?: string;
+  extraActions?: {
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+  }[];
   onClose: () => void;
 }
 
@@ -11,8 +17,45 @@ function ExhibitPopup({
   exhibit,
   title = 'Найден новый экспонат!',
   actionLabel = 'Продолжить',
+  extraActions = [],
   onClose,
 }: ExhibitPopupProps) {
+  const buttonStyle = {
+    fontFamily: "'Cinzel', 'Georgia', serif",
+    fontSize: '1rem',
+    fontWeight: 600,
+    color: '#f5e6c8',
+    background: 'linear-gradient(135deg, rgba(160,110,40,0.7), rgba(100,65,15,0.7))',
+    border: '1px solid rgba(210,170,90,0.75)',
+    borderRadius: '6px',
+    padding: '12px 28px',
+    cursor: 'pointer',
+    letterSpacing: '0.08em',
+    textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
+    transition: 'background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, opacity 0.2s ease',
+  };
+
+  const disabledButtonStyle = {
+    ...buttonStyle,
+    cursor: 'default',
+    opacity: 0.45,
+  };
+
+  const handleButtonMouseEnter = (event: MouseEvent<HTMLButtonElement>) => {
+    if (event.currentTarget.disabled) return;
+    event.currentTarget.style.background = 'linear-gradient(135deg, rgba(200,150,60,0.9), rgba(140,90,20,0.9))';
+    event.currentTarget.style.boxShadow = '0 4px 18px rgba(200,150,50,0.45)';
+    event.currentTarget.style.transform = 'translateY(-1px)';
+  };
+
+  const handleButtonMouseLeave = (event: MouseEvent<HTMLButtonElement>) => {
+    if (event.currentTarget.disabled) return;
+    event.currentTarget.style.background = 'linear-gradient(135deg, rgba(160,110,40,0.7), rgba(100,65,15,0.7))';
+    event.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.35)';
+    event.currentTarget.style.transform = 'translateY(0)';
+  };
+
   return (
     <div
       role="dialog"
@@ -138,37 +181,29 @@ function ExhibitPopup({
             borderTop: '1px solid rgba(210,170,90,0.3)',
             display: 'flex',
             justifyContent: 'center',
+            gap: '14px',
             flexShrink: 0,
           }}
         >
+          {extraActions.map(action => (
+            <button
+              key={action.label}
+              type="button"
+              onClick={action.onClick}
+              disabled={action.disabled}
+              style={action.disabled ? disabledButtonStyle : buttonStyle}
+              onMouseEnter={handleButtonMouseEnter}
+              onMouseLeave={handleButtonMouseLeave}
+            >
+              {action.label}
+            </button>
+          ))}
           <button
             type="button"
             onClick={onClose}
-            style={{
-              fontFamily: "'Cinzel', 'Georgia', serif",
-              fontSize: '1rem',
-              fontWeight: 600,
-              color: '#f5e6c8',
-              background: 'linear-gradient(135deg, rgba(160,110,40,0.7), rgba(100,65,15,0.7))',
-              border: '1px solid rgba(210,170,90,0.75)',
-              borderRadius: '6px',
-              padding: '12px 36px',
-              cursor: 'pointer',
-              letterSpacing: '0.08em',
-              textShadow: '0 1px 3px rgba(0,0,0,0.6)',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
-              transition: 'background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(200,150,60,0.9), rgba(140,90,20,0.9))';
-              e.currentTarget.style.boxShadow = '0 4px 18px rgba(200,150,50,0.45)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(160,110,40,0.7), rgba(100,65,15,0.7))';
-              e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.35)';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
+            style={buttonStyle}
+            onMouseEnter={handleButtonMouseEnter}
+            onMouseLeave={handleButtonMouseLeave}
           >
             {actionLabel}
           </button>
