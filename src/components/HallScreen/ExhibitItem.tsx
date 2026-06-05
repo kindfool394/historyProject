@@ -3,17 +3,21 @@ import type { Exhibit } from '../../types/museum';
 interface ExhibitItemProps {
   exhibit: Exhibit;
   isFound: boolean;
+  isActive: boolean;
   onClick: (id: string) => void;
 }
 
-function ExhibitItem({ exhibit, isFound, onClick }: ExhibitItemProps) {
+function ExhibitItem({ exhibit, isFound, isActive, onClick }: ExhibitItemProps) {
   const { position, width, height, id, shortName } = exhibit;
+  const isDisabled = isFound || !isActive;
 
   return (
     <button
       type="button"
       aria-label={`Экспонат: ${shortName}`}
       aria-pressed={isFound}
+      aria-disabled={isDisabled}
+      disabled={isDisabled}
       onClick={() => onClick(id)}
       style={{
         position: 'absolute',
@@ -22,8 +26,8 @@ function ExhibitItem({ exhibit, isFound, onClick }: ExhibitItemProps) {
         width: `${width}%`,
         height: `${height}%`,
         opacity: isFound ? 0.3 : 1,
-        pointerEvents: isFound ? 'none' : 'auto',
-        cursor: 'pointer',
+        pointerEvents: isDisabled ? 'none' : 'auto',
+        cursor: isActive ? 'pointer' : 'default',
         background: 'transparent',
         border: '2px solid transparent',
         borderRadius: '4px',
@@ -31,7 +35,7 @@ function ExhibitItem({ exhibit, isFound, onClick }: ExhibitItemProps) {
         padding: 0,
       }}
       onMouseEnter={e => {
-        if (!isFound) {
+        if (isActive) {
           e.currentTarget.style.boxShadow = '0 0 8px 2px rgba(255,220,100,0.8)';
           e.currentTarget.style.borderColor = 'rgba(255,220,100,0.5)';
         }

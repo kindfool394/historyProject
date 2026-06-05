@@ -17,16 +17,23 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
   const [newlyFoundExhibit, setNewlyFoundExhibit] = useState<Exhibit | null>(null);
 
   const safeFoundIds = gameState?.foundExhibitIds ?? new Set<string>();
+  const getExhibitKey = (exhibitId: string) => `${hall.id}:${exhibitId}`;
+  const hallFoundIds = new Set(
+    hall.exhibits
+      .filter(exhibit => safeFoundIds.has(getExhibitKey(exhibit.id)))
+      .map(exhibit => exhibit.id),
+  );
 
-  const allFound = safeFoundIds.size === hall.exhibits.length;
+  const allFound = hallFoundIds.size === hall.exhibits.length;
 
-  const foundExhibits = hall.exhibits.filter(e => safeFoundIds.has(e.id));
+  const foundExhibits = hall.exhibits.filter(e => hallFoundIds.has(e.id));
+  const activeExhibit = hall.exhibits.find(e => !hallFoundIds.has(e.id));
 
   const handleExhibitClick = (id: string) => {
-    if (!safeFoundIds.has(id)) {
+    if (activeExhibit?.id === id) {
       const exhibit = hall.exhibits.find(e => e.id === id);
       if (exhibit) {
-        onExhibitFound(id);
+        onExhibitFound(getExhibitKey(id));
         setNewlyFoundExhibit(exhibit);
       }
     }
@@ -68,7 +75,8 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
         <ExhibitItem
           key={exhibit.id}
           exhibit={exhibit}
-          isFound={safeFoundIds.has(exhibit.id)}
+          isFound={hallFoundIds.has(exhibit.id)}
+          isActive={activeExhibit?.id === exhibit.id}
           onClick={handleExhibitClick}
         />
       ))}
@@ -77,7 +85,7 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
       <BottomPanel
         hallName={hall.name}
         exhibits={hall.exhibits}
-        foundExhibitIds={safeFoundIds}
+        foundExhibitIds={hallFoundIds}
         onJournalOpen={() => setIsJournalOpen(true)}
         allFound={allFound}
       />
