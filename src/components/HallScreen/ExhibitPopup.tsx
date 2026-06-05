@@ -2,15 +2,22 @@ import type { Exhibit } from '../../types/museum';
 
 interface ExhibitPopupProps {
   exhibit: Exhibit;
+  title?: string;
+  actionLabel?: string;
   onClose: () => void;
 }
 
-function ExhibitPopup({ exhibit, onClose }: ExhibitPopupProps) {
+function ExhibitPopup({
+  exhibit,
+  title = 'Найден новый экспонат!',
+  actionLabel = 'Продолжить',
+  onClose,
+}: ExhibitPopupProps) {
   return (
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`Найден экспонат: ${exhibit.fullName}`}
+      aria-label={`${title}: ${exhibit.fullName}`}
       style={{
         position: 'fixed',
         inset: 0,
@@ -56,7 +63,7 @@ function ExhibitPopup({ exhibit, onClose }: ExhibitPopupProps) {
               textShadow: '0 1px 4px rgba(0,0,0,0.6)',
             }}
           >
-            Найден новый экспонат!
+            {title}
           </h2>
         </div>
 
@@ -163,7 +170,7 @@ function ExhibitPopup({ exhibit, onClose }: ExhibitPopupProps) {
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
-            Продолжить
+            {actionLabel}
           </button>
         </div>
       </div>

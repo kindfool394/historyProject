@@ -35,10 +35,12 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
   const [isIntroOpen, setIsIntroOpen] = useState(true);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
   const [newlyFoundExhibit, setNewlyFoundExhibit] = useState<Exhibit | null>(null);
+  const [tourIndex, setTourIndex] = useState<number | null>(null);
   const introText = hallIntroText[hall.id];
 
   useEffect(() => {
     setIsIntroOpen(true);
+    setTourIndex(null);
   }, [hall.id]);
 
   const safeFoundIds = gameState?.foundExhibitIds ?? new Set<string>();
@@ -67,6 +69,24 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
   const handlePopupClose = () => {
     setNewlyFoundExhibit(null);
   };
+
+  const handleTourStart = () => {
+    setIsJournalOpen(false);
+    setNewlyFoundExhibit(null);
+    setTourIndex(hall.exhibits.length > 0 ? 0 : null);
+  };
+
+  const handleTourNext = () => {
+    setTourIndex(currentIndex => {
+      if (currentIndex === null || currentIndex >= hall.exhibits.length - 1) {
+        return null;
+      }
+
+      return currentIndex + 1;
+    });
+  };
+
+  const tourExhibit = tourIndex === null ? null : hall.exhibits[tourIndex];
 
   return (
     <div
@@ -112,6 +132,7 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
         exhibits={hall.exhibits}
         foundExhibitIds={hallFoundIds}
         onJournalOpen={() => setIsJournalOpen(true)}
+        onTourStart={handleTourStart}
         allFound={allFound}
       />
 
@@ -128,6 +149,15 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
         <ExhibitPopup
           exhibit={newlyFoundExhibit}
           onClose={handlePopupClose}
+        />
+      )}
+
+      {tourExhibit && tourIndex !== null && (
+        <ExhibitPopup
+          exhibit={tourExhibit}
+          title={`Экскурсия: ${tourIndex + 1} из ${hall.exhibits.length}`}
+          actionLabel={tourIndex === hall.exhibits.length - 1 ? 'Завершить' : 'Следующий'}
+          onClose={handleTourNext}
         />
       )}
 

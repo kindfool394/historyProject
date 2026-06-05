@@ -7,10 +7,32 @@ interface BottomPanelProps {
   exhibits: Exhibit[];
   foundExhibitIds: Set<string>;
   onJournalOpen: () => void;
+  onTourStart: () => void;
   allFound: boolean;
 }
 
-function BottomPanel({ hallName, exhibits, foundExhibitIds, onJournalOpen }: BottomPanelProps) {
+function BottomPanel({ hallName, exhibits, foundExhibitIds, onJournalOpen, onTourStart }: BottomPanelProps) {
+  const actionButtonStyle = {
+    position: 'absolute' as const,
+    top: '42%',
+    transform: 'translateY(-50%)',
+    fontFamily: "'Cinzel', 'Georgia', serif",
+    fontSize: '1rem',
+    fontWeight: 600,
+    color: '#f5e6c8',
+    background: 'linear-gradient(135deg, rgba(160,110,40,0.65), rgba(100,65,15,0.65))',
+    border: '1px solid rgba(210,170,90,0.75)',
+    borderRadius: '6px',
+    padding: '10px 22px',
+    cursor: 'pointer',
+    letterSpacing: '0.1em',
+    textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
+    transition: 'background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
+    whiteSpace: 'nowrap' as const,
+    zIndex: 3,
+  };
+
   return (
     <div
       style={{
@@ -72,36 +94,28 @@ function BottomPanel({ hallName, exhibits, foundExhibitIds, onJournalOpen }: Bot
             justifyContent: 'center',
           }}
         >
+          <button
+            type="button"
+            onClick={onTourStart}
+            style={{
+              ...actionButtonStyle,
+              right: '250px',
+            }}
+          >
+            Экскурсия
+          </button>
+
           {/* Кнопка журнала  ляляля*/}
-        <button
-          type="button"
-          onClick={onJournalOpen}
-          style={{
-            position: 'absolute',
-
-            right: '90px',
-            top: '42%',
-            transform: 'translateY(-50%)',
-
-            fontFamily: "'Cinzel', 'Georgia', serif",
-            fontSize: '1rem',
-            fontWeight: 600,
-            color: '#f5e6c8',
-            background: 'linear-gradient(135deg, rgba(160,110,40,0.65), rgba(100,65,15,0.65))',
-            border: '1px solid rgba(210,170,90,0.75)',
-            borderRadius: '6px',
-            padding: '10px 22px',
-            cursor: 'pointer',
-            letterSpacing: '0.1em',
-            textShadow: '0 1px 3px rgba(0,0,0,0.6)',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
-            transition: 'background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
-            whiteSpace: 'nowrap',
-            zIndex: 3,
-          }}
-        >
-          Журнал
-        </button>
+          <button
+            type="button"
+            onClick={onJournalOpen}
+            style={{
+              ...actionButtonStyle,
+              right: '90px',
+            }}
+          >
+            Журнал
+          </button>
         </div>
 
           {/* тру название*/}
