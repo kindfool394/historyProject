@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { HallData, GameState, Exhibit } from '../../types/museum';
 import ExhibitItem from './ExhibitItem';
 import BottomPanel from './BottomPanel';
 import Journal from './Journal';
 import ExhibitPopup from './ExhibitPopup';
+import InfoPopup from '../HomeScreen/InfoPopup';
 
 interface HallScreenProps {
   hall: HallData;
@@ -12,9 +13,33 @@ interface HallScreenProps {
   onBack: () => void;
 }
 
+const hallIntroText: Record<string, { title: string; description: string }> = {
+  hall1: {
+    title: 'Зал 1. «Средневековый город»',
+    description:
+      'Добро пожаловать в зал «Средневековый город». Здесь мы увидим, из чего складывалась повседневная жизнь человека Средневековья: торговля, ремесло, деньги, письмо, украшения и предметы быта. Каждый экспонат поможет представить город не как далёкое прошлое, а как живое пространство людей, дел и привычек.',
+  },
+  hall2: {
+    title: 'Зал 2. «Оружие и война»',
+    description:
+      'Теперь мы переходим в зал «Оружие и война». Здесь представлены предметы, связанные с защитой, нападением, конным снаряжением и воинской повседневностью. Мы увидим, как были устроены доспехи, какое оружие использовали в бою и почему лошадь в Средние века была важнейшим спутником воина.',
+  },
+  hall3: {
+    title: 'Зал 3. «Духовная культура»',
+    description:
+      'Перед нами зал «Духовная культура», посвящённый вере, книжности и церковному искусству. Здесь собраны личные святыни, рукописи, богослужебные предметы и архитектурные детали. Эти экспонаты показывают, какое место занимала религия в жизни человека и как духовные идеи воплощались в вещах.',
+  },
+};
+
 function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps) {
+  const [isIntroOpen, setIsIntroOpen] = useState(true);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
   const [newlyFoundExhibit, setNewlyFoundExhibit] = useState<Exhibit | null>(null);
+  const introText = hallIntroText[hall.id];
+
+  useEffect(() => {
+    setIsIntroOpen(true);
+  }, [hall.id]);
 
   const safeFoundIds = gameState?.foundExhibitIds ?? new Set<string>();
   const getExhibitKey = (exhibitId: string) => `${hall.id}:${exhibitId}`;
@@ -103,6 +128,14 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
         <ExhibitPopup
           exhibit={newlyFoundExhibit}
           onClose={handlePopupClose}
+        />
+      )}
+
+      {isIntroOpen && introText && (
+        <InfoPopup
+          title={introText.title}
+          description={introText.description}
+          onClose={() => setIsIntroOpen(false)}
         />
       )}
 
