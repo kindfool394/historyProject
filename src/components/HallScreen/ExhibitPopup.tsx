@@ -5,7 +5,7 @@ interface ExhibitPopupProps {
   exhibit: Exhibit;
   title?: string;
   actionLabel?: string;
-  extraActions?: {
+  actions?: {
     label: string;
     onClick: () => void;
     disabled?: boolean;
@@ -17,9 +17,10 @@ function ExhibitPopup({
   exhibit,
   title = 'Найден новый экспонат!',
   actionLabel = 'Продолжить',
-  extraActions = [],
+  actions,
   onClose,
 }: ExhibitPopupProps) {
+  const popupActions = actions ?? [{ label: actionLabel, onClick: onClose }];
   const buttonStyle = {
     fontFamily: "'Cinzel', 'Georgia', serif",
     fontSize: '1rem',
@@ -164,7 +165,7 @@ function ExhibitPopup({
                 fontSize: '1rem',
                 color: 'rgba(245,230,200,0.8)',
                 lineHeight: 1.6,
-                maxHeight: '300px',
+                height: '300px',
                 overflowY: 'auto',
                 paddingRight: '8px',
               }}
@@ -185,7 +186,7 @@ function ExhibitPopup({
             flexShrink: 0,
           }}
         >
-          {extraActions.map(action => (
+          {popupActions.map(action => (
             <button
               key={action.label}
               type="button"
@@ -198,15 +199,6 @@ function ExhibitPopup({
               {action.label}
             </button>
           ))}
-          <button
-            type="button"
-            onClick={onClose}
-            style={buttonStyle}
-            onMouseEnter={handleButtonMouseEnter}
-            onMouseLeave={handleButtonMouseLeave}
-          >
-            {actionLabel}
-          </button>
         </div>
       </div>
     </div>

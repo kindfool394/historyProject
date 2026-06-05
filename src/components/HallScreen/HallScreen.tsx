@@ -170,21 +170,21 @@ function HallScreen({ hall, gameState, onExhibitFound, onBack }: HallScreenProps
         <ExhibitPopup
           exhibit={tourExhibit}
           title={`Экскурсия: ${tourIndex + 1} из ${hall.exhibits.length}`}
-          actionLabel="Закрыть"
-          extraActions={[
+          actions={[
             {
               label: 'Предыдущий',
               onClick: handleTourPrevious,
               disabled: tourIndex === 0,
             },
-            ...(tourIndex === hall.exhibits.length - 1
-              ? []
-              : [
-                  {
-                    label: 'Следующий',
-                    onClick: handleTourNext,
-                  },
-                ]),
+            {
+              label: 'Закрыть',
+              onClick: handleTourClose,
+            },
+            {
+              label: 'Следующий',
+              onClick: handleTourNext,
+              disabled: tourIndex === hall.exhibits.length - 1,
+            },
           ]}
           onClose={handleTourClose}
         />
